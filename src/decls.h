@@ -164,6 +164,7 @@ struct data_declaration {
 				   Set by the `C' attribute. */
   bool safe;			/* True if deputy safety checks should
 				   be enabled */
+  bool optimistic_race_detection;
   call_contexts spontaneous;	/* Call contexts for environmental calls
 				   (main, interrupt handlers, e.g.). Set by
 				   the `spontaneous', `interrupt' and
@@ -184,6 +185,7 @@ struct data_declaration {
   bool async;			/* True if async declared (cmd/event) or
 				   inferred (C function) */
   bool actual_async;		/* Inferred value for async */
+  bool optimistic_async;
   /* The call_contexts summarise the runtime contexts in which this fn
      might be called. So if all calls to f are in atomic statements,
      and f calls g outside an atomic statement, then 
@@ -210,6 +212,8 @@ struct data_declaration {
   bool isparameter; 		/* implies islocal */
   bool async_access;		/* Some kind of access in an async context */
   bool async_write;		/* A write in async context */
+  bool optimistic_async_access;
+  bool optimistic_async_write;
   bool norace;
 
   /* For constants */

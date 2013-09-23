@@ -112,6 +112,7 @@ void init_data_declaration(data_declaration dd, declaration ast,
   dd->ftype = 0;
   dd->isinline = FALSE;
   dd->noinlinep = FALSE;
+  dd->optimistic_race_detection = FALSE;
   dd->isexterninline = FALSE;
   dd->oldstyle_args = NULL;
   dd->vtype = 0;
@@ -127,6 +128,7 @@ void init_data_declaration(data_declaration dd, declaration ast,
   dd->uncallable = FALSE;
   dd->async = FALSE;
   dd->actual_async = FALSE;
+  dd->optimistic_async = FALSE;
   dd->required = FALSE;
   dd->itype = NULL;
   dd->gparms = NULL;
@@ -144,6 +146,7 @@ void init_data_declaration(data_declaration dd, declaration ast,
   dd->container_function = NULL;
   dd->use_summary = 0;
   dd->async_access = dd->async_write = FALSE;
+  dd->optimistic_async_access = dd->optimistic_async_write = FALSE;
   dd->norace = FALSE;
   dd->instantiation = NULL;
   dd->instanceof = NULL;
@@ -1531,6 +1534,9 @@ int duplicate_decls(data_declaration newdecl, data_declaration olddecl,
      declerations are made inline. */
   if (newdecl->noinlinep || olddecl->noinlinep) 
     newdecl->noinlinep = olddecl->noinlinep = TRUE;
+
+  if (newdecl->optimistic_race_detection || olddecl->optimistic_race_detection)
+    newdecl->optimistic_race_detection = olddecl->optimistic_race_detection = TRUE;
 
   if (different_binding_level)
     {

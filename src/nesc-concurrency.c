@@ -27,16 +27,19 @@ static inline bool is_call_edge(gedge e)
   return (EDGE_GET(use, e)->c & c_fncall) != 0;
 }
 
-static void rec_async(gnode n, bool async_caller)
+static void rec_async(gnode n, bool async_caller, bool optimistic_async_caller)
 {
   gedge edge;
   data_declaration fn = NODE_GET(endp, n)->function;
   bool async = fn->async || fn->actual_async || async_caller;
+  bool optimistic_async = (fn->spontaneous && fn->async) ||
+      fn->optimistic_async || optimistic_async_caller;
 
 
   if (async == fn->actual_async)
     return;
   fn->actual_async = async;
+  fn->optimistic_async = optimistic_async;
 
   /* Martin Leopold: add an "async" gcc attribute to any async elements for targets
      that need to identify functions callable from interrupts. */
@@ -54,12 +57,14 @@ static void rec_async(gnode n, bool async_caller)
   /* We don't pass async through commands or events that are not
      declared async to avoid reporting errors for the fns called
      by the "async but not so declared" command or event */
-  if (ddecl_is_command_or_event(fn))
+  if (ddecl_is_command_or_event(fn)) {
     async = fn->async;
+    optimistic_async = fn->optimistic_async;
+  }
 
-  graph_scan_out (edge, n) 
+  graph_scan_out (edge, n)
     if (is_call_edge(edge))
-      rec_async(graph_edge_to(edge), async);
+      rec_async(graph_edge_to(edge), async, optimistic_async);
 }
 
 void async_violation(gnode n)
@@ -84,10 +89,10 @@ void check_async(cgraph callgraph)
 {
   ggraph cg = cgraph_graph(callgraph);
   gnode n;
-  
+
   /* Find least fixed point of async w/ recursive graph walk */
   graph_scan_nodes (n, cg)
-    rec_async(n, FALSE);
+    rec_async(n, FALSE, FALSE);
 
   /* Report violations of async. We force async warnings when detecting
      data races. */
@@ -134,6 +139,12 @@ static dd_list find_async_variables(region r, cgraph callgraph)
 		  }
 		if (c & c_write)
 		  id->async_write = TRUE;
+                if (fn->optimistic_async)
+                  {
+                    id->optimistic_async_access = TRUE;
+                    if (c & c_write)
+                      id->optimistic_async_write = TRUE;
+                  }
 	      }
 	  }
     }
@@ -194,6 +205,14 @@ static void check_async_vars(dd_list avars)
 	  {
 	    use u = DD_GET(use, ause);
 	    context bad_contexts = c_write;
+            context bad_optimistic_contexts = 0;
+
+            if (v->optimistic_async_access)
+              {
+                bad_optimistic_contexts = c_write;
+                if (v->optimistic_async_write)
+                  bad_optimistic_contexts |= c_read;
+              }
 
 	    /* If there are no writes in async contexts, then reads
 	       need not be protected */
@@ -214,6 +233,10 @@ static void check_async_vars(dd_list avars)
 	      {
 		const char *cname;
 
+                if (v->optimistic_race_detection &&
+                        !(u->c & bad_optimistic_contexts))
+                  continue;
+
 		if (first)
 		  {
 		    location vloc =
@@ -222,6 +245,11 @@ static void check_async_vars(dd_list avars)
 		    nesc_warning_with_location
 		      (vloc, "non-atomic accesses to shared variable `%s':",
 		       v->name);
+                    if (!(u->c & bad_optimistic_contexts))
+		      nesc_warning_with_location
+		        (vloc, "  (add @optimistic_race_detection() to "
+                               "variable definition if you really want "
+                               "to allow such sync-only accesses)");
 		  }
 
 		if ((u->c & (c_read | c_write)) == (c_read | c_write) &&

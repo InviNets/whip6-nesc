@@ -46,6 +46,7 @@ bool nesc_attributep(gcc_attribute a)
 
   return !strcmp(name, "C") || 
     !strcmp(name, "spontaneous") ||
+    !strcmp(name, "optimistic_race_detection") ||
     !strcmp(name, "combine") ||
     !strcmp(name, "nx_base") ||
     !strcmp(name, "nx_base_le") ||
@@ -677,6 +678,14 @@ static void attr_spontaneous_decl(nesc_attribute attr, data_declaration ddecl)
     }
 }
 
+static void attr_optimistic_race_detection_decl(nesc_attribute attr, data_declaration ddecl)
+{
+  if (ddecl->kind == decl_variable)
+    ddecl->optimistic_race_detection = TRUE;
+  else
+    error_with_location(attr->location, "@optimistic_race_detection() can only be applied to variables");
+}
+
 static void attr_combine_decl(nesc_attribute attr, data_declaration ddecl)
 {
   ivalue fn_init = lookup_attribute_field(attr, "fn");
@@ -737,6 +746,9 @@ void init_internal_nesc_attributes(void)
   define_internal_attribute("atomic_hwevent", NULL, attr_atomic_hwevent_decl,
 			    NULL, NULL, NULL, NULL);
   define_internal_attribute("spontaneous", NULL, attr_spontaneous_decl, NULL,
+			    NULL, NULL, NULL);
+  define_internal_attribute("optimistic_race_detection", NULL,
+                            attr_optimistic_race_detection_decl, NULL,
 			    NULL, NULL, NULL);
   define_internal_attribute("combine", NULL, attr_combine_decl, NULL, NULL,
 			    NULL,

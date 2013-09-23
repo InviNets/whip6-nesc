@@ -150,6 +150,7 @@ void preprocess_init(void)
       sprintf(buf, "TOSH_NUM_NODES=%s", nido_num_nodes);
       cpp_define(reader, buf);
     }
+  cpp_define(reader, "__NESC_HAS_OPTIMISTIC_RACE_DETECTION");
   end_lex();
   current.lex.input = NULL;
   deleteregion_ptr(&current.fileregion);
