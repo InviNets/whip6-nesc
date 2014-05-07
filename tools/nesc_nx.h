@@ -1,59 +1,59 @@
-/* 
-  This file is provided under a dual BSD/GPLv2 license.  When using or 
+/*
+  This file is provided under a dual BSD/GPLv2 license.  When using or
   redistributing this file, you may do so under either license.
 
   GPL LICENSE SUMMARY
 
   Copyright(c) 2006 Intel Corporation. All rights reserved.
 
-  This program is free software; you can redistribute it and/or modify 
+  This program is free software; you can redistribute it and/or modify
   it under the terms of version 2 of the GNU General Public License as
   published by the Free Software Foundation.
 
-  This program is distributed in the hope that it will be useful, but 
-  WITHOUT ANY WARRANTY; without even the implied warranty of 
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
 
-  You should have received a copy of the GNU General Public License 
-  along with this program; if not, write to the Free Software 
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
-  The full GNU General Public License is included in this distribution 
+  The full GNU General Public License is included in this distribution
   in the file called LICENSE.GPL.
 
   Contact Information:
    David Gay, david.e.gay@intel.com
    Intel Labs Berkeley, 2150 Shattuck Avenue, Suite 1300, Berkeley, CA, 94704
 
-  BSD LICENSE 
+  BSD LICENSE
 
   Copyright(c) 2006 Intel Corporation. All rights reserved.
   All rights reserved.
 
-  Redistribution and use in source and binary forms, with or without 
-  modification, are permitted provided that the following conditions 
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
   are met:
 
-    * Redistributions of source code must retain the above copyright 
+    * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright 
-      notice, this list of conditions and the following disclaimer in 
-      the documentation and/or other materials provided with the 
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in
+      the documentation and/or other materials provided with the
       distribution.
-    * Neither the name of Intel Corporation nor the names of its 
-      contributors may be used to endorse or promote products derived 
+    * Neither the name of Intel Corporation nor the names of its
+      contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
-  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
-  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
-  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #ifdef __MSP430
@@ -372,6 +372,7 @@ inline uint32_t __nesc_hton_leuint32(void * COUNT(4) target, uint32_t value) @sa
 __NX_DECLARE_FUNCTIONS(32)
 __NX_DECLARE_BF_FUNCTIONS(32)
 
+#ifndef NO_64BIT_INTEGERS
 
 /* 64-bits */
 /* ------- */
@@ -426,26 +427,28 @@ inline uint64_t __nesc_hton_leuint64(void * COUNT(8) target, uint64_t value) @sa
 __NX_DECLARE_FUNCTIONS(64)
 __NX_DECLARE_BF_FUNCTIONS(64)
 
+typedef int64_t nx_int64_t __attribute__((nx_base_be(int64)));
+typedef uint64_t nx_uint64_t __attribute__((nx_base_be(uint64)));
+typedef int64_t nxle_int64_t __attribute__((nx_base_le(leint64)));
+typedef uint64_t nxle_uint64_t __attribute__((nx_base_le(leuint64)));
+
+#endif
 
 /* Standard external types: big-endian */
 typedef int8_t nx_int8_t __attribute__((nx_base_be(int8)));
 typedef int16_t nx_int16_t __attribute__((nx_base_be(int16)));
 typedef int32_t nx_int32_t __attribute__((nx_base_be(int32)));
-typedef int64_t nx_int64_t __attribute__((nx_base_be(int64)));
 typedef uint8_t nx_uint8_t __attribute__((nx_base_be(uint8)));
 typedef uint16_t nx_uint16_t __attribute__((nx_base_be(uint16)));
 typedef uint32_t nx_uint32_t __attribute__((nx_base_be(uint32)));
-typedef uint64_t nx_uint64_t __attribute__((nx_base_be(uint64)));
 
 /* Little endian external types, for those apps that need them. */
 typedef int8_t nxle_int8_t __attribute__((nx_base_le(leint8)));
 typedef int16_t nxle_int16_t __attribute__((nx_base_le(leint16)));
 typedef int32_t nxle_int32_t __attribute__((nx_base_le(leint32)));
-typedef int64_t nxle_int64_t __attribute__((nx_base_le(leint64)));
 typedef uint8_t nxle_uint8_t __attribute__((nx_base_le(leuint8)));
 typedef uint16_t nxle_uint16_t __attribute__((nx_base_le(leuint16)));
 typedef uint32_t nxle_uint32_t __attribute__((nx_base_le(leuint32)));
-typedef uint64_t nxle_uint64_t __attribute__((nx_base_le(leuint64)));
 
 #undef __NX_DECLARE_FUNCTIONS
 #undef __NX_DECLARE_BF_FUNCTIONS
