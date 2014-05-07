@@ -5,6 +5,7 @@
 *.a
 .deps
 Makefile
+stamp-h1
 autom4te.cache
 libiberty/config.h
 libiberty/needed-list
@@ -31,3 +32,6 @@ tools/nescc-diff
 tools/nescc-mig
 tools/nescc-ncg
 tools/nescc-wiring
+libcpp/localedir.hs
+libiberty/temp-frag
+src/autoconf.h
