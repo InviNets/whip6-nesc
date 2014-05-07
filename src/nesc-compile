@@ -20,7 +20,6 @@ use File::Basename;
 
 for ($i = 0; $i <= $#ARGV; $i++) {
     $_ = $ARGV[$i];
-
     if (/^-_ASM$/) {
 	# magic marker for assembler options
 	$for_assembler = 1;
@@ -42,6 +41,9 @@ for ($i = 0; $i <= $#ARGV; $i++) {
 	    $verbose = 1 if /^-v/;
 	}
 
+	if (/^-fnostdinc$/) {
+	    push @nesc_args, "-nostdinc";
+	}
 	if (/^-([IDUA])/) {
 	    $opt = $1;
 	    ($i, $val) = &extractarg($i);
