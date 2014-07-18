@@ -36,6 +36,7 @@ static machine_spec *machines[] = {
   &self_machine,
   &keil_machine,
   &sdcc_machine,
+  &sdcc_notoken_machine,
   &msp430_machine,
   &env_machine,
   NULL
