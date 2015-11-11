@@ -68,7 +68,7 @@ for ($i = 0; $i <= $#ARGV; $i++) {
 	    push @nescc_args, "-fnesc-mingw-gcc";
 	} elsif (/^-conly$/) {
 	    $ENV{NESCC_CONLY} = "yes";
-	    push @nescc_args, "-fsyntax-only";
+	    push @new_args, "-fsyntax-only";
 	} elsif (/^-fnesc-cfile=(.*)$/) {
 	    $ENV{NESCC_CFILE} = $1;
 	} elsif (/^-_?fnesc-deputy$/) {
