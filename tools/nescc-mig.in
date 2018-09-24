@@ -17,7 +17,9 @@
 # the Free Software Foundation, 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-$prefix = "@prefix@";
+use File::Basename;
+
+$prefix = dirname($0) . "/..";
 $exec_prefix = "@exec_prefix@";
 $nescc = "$exec_prefix/bin/nescc";
 $NCDIR = "@libdir@/ncc";
