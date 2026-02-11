@@ -1,0 +1,5 @@
+#!/bin/bash
+./configure \
+  CFLAGS="-Wno-incompatible-pointer-types -std=c11 -D_GNU_SOURCE" \
+  "$@"
+
