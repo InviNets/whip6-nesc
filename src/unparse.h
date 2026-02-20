@@ -107,6 +107,7 @@ typedef enum {
 } psd_options;
 
 void prt_type_elements(type_element elements, psd_options options);
+bool prt_type_element(type_element em, psd_options options);
 void prt_attribute_elements(type_element elements);
 void prt_interesting_elements(type_element elements, psd_options options);
 

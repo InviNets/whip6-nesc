@@ -1,4 +1,8 @@
-To build nesC: in this directory
+To build nesC with gcc 15 and newer: in this directory
+./configure-compat [--prefix=<where you want to install nesc]
+make
+
+For older versions of gcc: in this directory
 ./configure [--prefix=<where you want to install nesc]
 make
 
